@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+#
+# Copy from VM to dom0
+#
+
+main() {
+  local -r qube="${1}"
+  local -r path="${2}"
+  local -r target_dir=~/QubesIncoming/"${qube}"
+  mkdir -p -- "${target_dir}"
+  rm -rf "${target_dir}"/*
+
+  local -r file_name="$(basename "${path}")"
+  local -r dir_name="$(dirname "${path}")"
+  qvm-run --no-gui --pass-io -- "${qube}" "tar -cf - -C ${dir_name} ${file_name}" | \
+    tar -xf - -C "${target_dir}"
+}
+
+main "$@"
