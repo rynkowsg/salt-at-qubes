@@ -1,0 +1,10 @@
+base:
+  'dom0':
+    - match: nodegroup
+    - tpl-dev-debian.clone
+  'E@^tpl-dev-debian-(11|12)$':
+    - match: compound
+    - tpl-dev-debian.install
+
+# Do not continue this.
+# Make a separate dev template, not 'fedora-dev' and 'debian-dev', but one common 'dev'

@@ -1,0 +1,24 @@
+{#
+#}
+
+{%- import slsdotpath ~ "/vars.jinja" as vars -%}
+
+"{{ slsdotpath }}.38-installed":
+  qvm.template_installed:
+    - name: fedora-38-minimal
+    - from: {{ vars.repo }}
+
+"{{ slsdotpath }}.39-installed":
+  qvm.template_installed:
+    - name: fedora-39-minimal
+    - from: {{ vars.repo }}
+
+"{{ slsdotpath }}.40-installed":
+  qvm.template_installed:
+    - name: fedora-40-minimal
+    - from: {{ vars.repo }}
+
+"{{ slsdotpath }}.41-installed":
+  qvm.template_installed:
+    - name: fedora-41-minimal
+    - from: {{ vars.repo }}

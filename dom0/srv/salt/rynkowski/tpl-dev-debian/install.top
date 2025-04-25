@@ -1,0 +1,4 @@
+base:
+  'E@^tpl-dev-debian-(11|12)$':
+    - match: compound
+    - tpl-dev-debian.install

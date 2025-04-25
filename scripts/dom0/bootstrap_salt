@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# To update the file:
+#
+#  qvm-copy-from-vm "${SRC_QUBE}" src/playground/salt-at-qubes/scripts/dom0/bootstrap_salt
+#  mv "${HOME}/QubesIncoming/${SRC_QUBE}/bootstrap_salt" "${HOME}/bin/bootstrap_salt"
+#
+
+# Bash Strict Mode Settings
+set -euo pipefail
+# Set dir variables
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
+
+set -x
+
+SOURCE_QUBE="${1:-work-rynkowsg}"
+SOURCE_PATH="${2:-src/playground/salt-at-qubes}"
+
+CURRENT_DIR=$(pwd)
+qvm-copy-from-vm "${SOURCE_QUBE}" "${SOURCE_PATH}"
+
+FILENAME="$(basename "${SOURCE_PATH}")"
+TMP_DIR="$(mktemp -d -t "salt-XXXX")"
+DEST_DIR="${TMP_DIR}/${FILENAME}"
+
+mv "${HOME}/QubesIncoming/${SOURCE_QUBE}/${FILENAME}" "${DEST_DIR}"
+
+bash "${DEST_DIR}/scripts/install.bash" "${DEST_DIR}"
+bash "${DEST_DIR}/scripts/run.bash" "${DEST_DIR}"
