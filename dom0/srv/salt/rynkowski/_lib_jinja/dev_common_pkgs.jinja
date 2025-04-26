@@ -1,4 +1,58 @@
-{% set pkgs = [
-  'mc',
-  'zsh',
+{% set common_qube_pkgs = [
+  'pulseaudio-qubes',
+  'qubes-core-agent-networking',
+  'qubes-usb-proxy',
 ] -%}
+
+{% set common_gui_pkgs = [
+  'gnome-system-monitor',
+  'xfce4-terminal',
+] -%}
+
+{% set common_gui_dev_pkgs = [
+  'git-cola',
+  'meld',
+] -%}
+
+{% set browsers_pkgs = [
+  'chromium',
+  {'Debian': 'firefox-esr', 'RedHat': 'firefox'}.get(grains.os_family),
+] -%}
+
+{% set man_pkgs = {
+  'Debian': ['man-db'],
+  'RedHat': ['man-db', 'man-pages'],
+}.get(grains.os_family)
+-%}
+
+{% set base_pkgs = [
+  ['coreutils'],
+  ['jq'],
+  ['less'],
+  ['bc'],
+  ['curl'],
+  ['tree'],
+  ['xclip'],
+  ['bash'],
+  ['bash-completion'],
+  ['zsh'],
+  ['mc'],
+  man_pkgs,
+  ['screen'],
+  ['tmux'],
+  ['emacs'],
+  ['git'],
+  ['git-lfs'],
+  ['pass',
+   {'Debian': 'pass-extension-otp', 'RedHat': 'pass-otp'}.get(grains.os_family)],
+  ['qubes-snapd-helper'],
+  ['snapd'],
+] | sum(start=[]) -%}
+
+{% set pkgs =
+  common_qube_pkgs +
+  common_gui_pkgs +
+  common_gui_dev_pkgs +
+  browsers_pkgs +
+  base_pkgs
+-%}
