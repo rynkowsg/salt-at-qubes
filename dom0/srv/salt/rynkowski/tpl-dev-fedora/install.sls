@@ -8,12 +8,12 @@
 {%- import slsdotpath ~ "/vars.jinja" as vars -%}
 
 include:
-  - _lib_sls.common.update
+  - catalog.misc.pkgs_updated
 
 "{{ slsdotpath }}-pkgs-installed":
   pkg.installed:
     - require:
-      - sls: _lib_sls.common.update
+      - pkg: "catalog.misc.pkgs_updated/default"
     - install_recommends: False
     - skip_suggestions: True
     - pkgs: {{ vars.pkgs|sequence|yaml }}
