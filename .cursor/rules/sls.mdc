@@ -1,0 +1,35 @@
+---
+description: sls rules
+alwaysApply: true
+---
+
+### Conventions
+
+- states have .sls extension
+- top files .top extension
+
+### Code Style
+- Use consistent indentation with 2 spaces
+
+### Code origins & structure
+
+Most of the code at dom/ comes from QubesOS filesystem.
+It is code is tracked in these repositories:
+
+- https://github.com/QubesOS/qubes-mgmt-salt
+- https://github.com/QubesOS/qubes-mgmt-salt-base
+- https://github.com/QubesOS/qubes-mgmt-salt-base-topd
+- https://github.com/QubesOS/qubes-mgmt-salt-base-config
+- https://github.com/QubesOS/qubes-mgmt-salt-base-overrides
+- https://github.com/QubesOS/qubes-mgmt-salt-dom0-qvm
+- https://github.com/QubesOS/qubes-mgmt-salt-dom0-update
+- https://github.com/QubesOS/qubes-mgmt-salt-dom0-virtual-machines
+
+The custom Salt code is in dom0/srv/salt/rynkowski.
+
+### Inspirations
+
+These repositories contain useful examples of using SaltStack with Qubes OS:
+
+- https://github.com/unman/shaker
+- https://github.com/ben-grande/qusal
