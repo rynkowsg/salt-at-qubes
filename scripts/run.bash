@@ -30,6 +30,7 @@ set -x
 
 DEBIAN_DEV_TEMPLATES="tpl-dev-debian-11"
 FEDORA_DEV_TEMPLATES="tpl-dev-fedora-39"
+DEV_QUBES="${DEV_QUBES:-"work-rynkowsg"}"
 
 # debug
 #sudo qubesctl --show-output --targets="dom0" state.apply debug.print_vars
@@ -47,6 +48,9 @@ run_states() {
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-dev-fedora.clone
   sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply tpl-dev-fedora.install
   sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply tpl-dev-fedora.install-python-build-deps
+  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply catalog.docker_rootless.setup_tpl
+  # dev qubes
+  sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
 
 # the two below should be equivalent, but I prefer run_states
