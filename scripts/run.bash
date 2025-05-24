@@ -24,6 +24,17 @@ add_on_exit() {
   fi
 }
 
+### UTILITY FUNCTIONS
+
+# Function to join array elements with a delimiter
+join_by() {
+  local delimiter="$1"
+  shift
+  local first="$1"
+  shift
+  printf "%s" "$first" "${@/#/$delimiter}"
+}
+
 ### REST
 
 set -x
@@ -62,16 +73,26 @@ run_tops() {
 run_states() {
   # dom0
   # (no dom0-specific states yet)
+
   # dev templates - debian
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-debian-minimal.create
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-dev-debian.clone
-  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply tpl-dev-debian.install
+  local debian_dev_states=(
+    "tpl-dev-debian.install"
+    "catalog.docker_rootless.setup_tpl"
+  )
+  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${debian_dev_states[@]}")"
+
   # dev templates - fedora
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-fedora-minimal.create
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-dev-fedora.clone
-  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply tpl-dev-fedora.install
-  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply tpl-dev-fedora.install-python-build-deps
-  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply catalog.docker_rootless.setup_tpl
+  local fedora_dev_states=(
+    "tpl-dev-fedora.install"
+    "tpl-dev-fedora.install-python-build-deps"
+    "catalog.docker_rootless.setup_tpl"
+  )
+  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states[@]}")"
+
   # dev qubes
   sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
