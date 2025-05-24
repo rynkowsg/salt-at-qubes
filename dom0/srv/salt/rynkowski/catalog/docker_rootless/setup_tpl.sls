@@ -5,7 +5,40 @@
 
 {% if grains['os_family']|lower == 'debian' -%}
 
-# TODO
+{% set gpg_key_path = "/usr/share/keyrings/docker.asc" %}
+
+"{{ ns }}/keyring-installed":
+  file.managed:
+    - name: {{ gpg_key_path }}
+    - source: salt://{{ slspath }}/files/repo/apt/docker.asc
+    - mode: '0644'
+    - user: root
+    - group: root
+    - makedirs: True
+
+# Keyring was downloaded with
+# curl -fsSL https://download.docker.com/linux/debian/gpg -o docker.asc
+
+"{{ ns }}/repo-installed":
+  file.managed:
+    - name: /etc/apt/sources.list.d/docker.sources
+    - source: salt://{{ slspath }}/files/repo/apt/docker.sources.j2
+    - template: jinja
+    - context:
+        os_codename: {{ grains['oscodename'] }}
+        gpg_key_path: {{ gpg_key_path }}
+    - mode: '0644'
+    - user: root
+    - group: root
+    - makedirs: True
+
+"{{ ns }}/repo-cache-updated":
+  cmd.run:
+    - require:
+        - file: "{{ ns }}/keyring-installed"
+        - file: "{{ ns }}/repo-installed"
+    - name: apt-get update
+    - unless: apt-cache policy docker-ce
 
 ###############################################################################
 
@@ -29,7 +62,7 @@
 {% set distro_map = {'CentOS': 'centos', 'Fedora': 'fedora', 'RedHat': 'rhel'} %}
 {% set docker_distro = distro_map.get(grains['os'], 'rhel') %}
 
-"{{ ns }}/rpm-repo-installed":
+"{{ ns }}/repo-installed":
   file.managed:
     - name: /etc/yum.repos.d/docker-ce.repo
     - source: salt://{{ slspath }}/files/repo/yum/docker-ce.repo.j2
@@ -45,32 +78,48 @@
 "{{ ns }}/repo-cache-updated":
   cmd.run:
     - require:
-        - file: "{{ ns }}/rpm-gpg-key-installed"
-        - file: "{{ ns }}/rpm-repo-installed"
+        - file: "{{ ns }}/keyring-installed"
+        - file: "{{ ns }}/repo-installed"
     - name: dnf makecache
     - unless: dnf repolist | grep -q docker-ce
+
+{% endif -%}
 
 "{{ ns }}/deps-installed":
   pkg.installed:
     - require:
-        - file: "{{ ns }}/rpm-gpg-key-installed"
-        - file: "{{ ns }}/rpm-repo-installed"
+        - file: "{{ ns }}/keyring-installed"
+        - file: "{{ ns }}/repo-installed"
         - cmd: "{{ ns }}/repo-cache-updated"
     - install_recommends: False
     - skip_suggestions: True
     - pkgs:
         - docker-ce
         - docker-ce-cli
+        - docker-ce-rootless-extras
         - containerd.io
         - docker-buildx-plugin
         - docker-compose-plugin
 
 "{{ ns }}/ensure-docker-service-disabled":
-  service.dead:
+  service.disabled:
     - require:
         - pkg: "{{ ns }}/deps-installed"
-    - name: docker
-    - enable: False  # We want rootless, not system-wide
+    - name: docker.service
+
+"{{ ns }}/ensure-docker-socket-disabled":
+  service.disabled:
+    - require:
+        - pkg: "{{ ns }}/deps-installed"
+    - name: docker.socket
+
+# Enable ip_tables
+#
+# Based on my tests:
+# - Fedora 39 needs it
+# - Debian 11 does not
+
+{% if grains['os']|lower == 'fedora' -%}
 
 "{{ ns }}/ip-tables-module-added":
   file.managed:
@@ -80,6 +129,6 @@
     - group: root
     - contents: |
         ip_tables
-  # ip_tables is necessary to run
+# `ip_tables` is necessary to run `dockerd-rootless-setuptool.sh install`
 
 {% endif -%}
