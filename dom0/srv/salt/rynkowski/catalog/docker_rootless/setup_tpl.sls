@@ -7,33 +7,55 @@
 
 # TODO
 
+###############################################################################
+
 {% elif grains['os_family']|lower == 'redhat' -%}
 
 # Instructions for Fedora:
 # https://docs.docker.com/engine/install/fedora/
 # https://docs.docker.com/engine/security/rootless/
 
-include:
-  - catalog.fedora.dnf_pkg_config_installed
-  - catalog.misc.pkgs_updated
+{% set gpg_key_path = "/etc/pki/rpm-gpg/RPM-GPG-KEY-docker-ce.asc" %}
 
-"{{ ns }}/repo-installed":
-  cmd.run:
-    - require:
-      - pkg: "catalog.misc.pkgs_updated/default"
-      - pkg: "catalog.fedora.dnf_pkg_config_installed/default"
-    - unless: test -e /etc/yum.repos.d/docker-ce.repo
-    - name: dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+"{{ ns }}/keyring-installed":
+  file.managed:
+    - name: {{ gpg_key_path }}
+    - source: salt://{{ slspath }}/files/repo/yum/docker-ce.asc
+    - mode: '0644'
+    - user: root
+    - group: root
+    - makedirs: True
+
+{% set distro_map = {'CentOS': 'centos', 'Fedora': 'fedora', 'RedHat': 'rhel'} %}
+{% set docker_distro = distro_map.get(grains['os'], 'rhel') %}
+
+"{{ ns }}/rpm-repo-installed":
+  file.managed:
+    - name: /etc/yum.repos.d/docker-ce.repo
+    - source: salt://{{ slspath }}/files/repo/yum/docker-ce.repo.j2
+    - template: jinja
+    - context:
+        docker_distro: {{ docker_distro }}
+        gpg_key_path: {{ gpg_key_path }}
+    - mode: '0644'
+    - user: root
+    - group: root
+    - makedirs: True
 
 "{{ ns }}/repo-cache-updated":
   cmd.run:
-    - require: [{cmd: "{{ ns }}/repo-installed"}]
+    - require:
+        - file: "{{ ns }}/rpm-gpg-key-installed"
+        - file: "{{ ns }}/rpm-repo-installed"
     - name: dnf makecache
     - unless: dnf repolist | grep -q docker-ce
 
 "{{ ns }}/deps-installed":
   pkg.installed:
-    - require: [{cmd: "{{ ns }}/repo-cache-updated"}]
+    - require:
+        - file: "{{ ns }}/rpm-gpg-key-installed"
+        - file: "{{ ns }}/rpm-repo-installed"
+        - cmd: "{{ ns }}/repo-cache-updated"
     - install_recommends: False
     - skip_suggestions: True
     - pkgs:
@@ -45,7 +67,8 @@ include:
 
 "{{ ns }}/ensure-docker-service-disabled":
   service.dead:
-    - require: [{pkg: "{{ ns }}/deps-installed"}]
+    - require:
+        - pkg: "{{ ns }}/deps-installed"
     - name: docker
     - enable: False  # We want rootless, not system-wide
 
