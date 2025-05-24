@@ -6,6 +6,16 @@
 #  mv "${HOME}/QubesIncoming/${SRC_QUBE}/bootstrap_salt" "${HOME}/bin/bootstrap_salt"
 #
 
+#
+# To run
+#
+#   ~/bin/bootstrap_salt work-rynkowsg
+#
+# or if we want to specify ENV vars for `run.bash`:
+#
+#   DEV_QUBES=work-rynkowsg ~/bin/bootstrap_salt work-rynkowsg
+#
+
 # Bash Strict Mode Settings
 set -euo pipefail
 # Set dir variables
