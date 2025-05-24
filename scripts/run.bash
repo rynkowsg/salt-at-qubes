@@ -54,6 +54,7 @@ run_states() {
   # dev templates - debian
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-debian-minimal.create,tpl-dev-debian.clone
   local debian_dev_states=(
+    # "catalog.debug.print_vars"
     "tpl-dev-debian.install"
     "catalog.docker_rootless.setup_tpl"
   )
@@ -62,6 +63,7 @@ run_states() {
   # dev templates - fedora
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-fedora-minimal.create,tpl-dev-fedora.clone
   local fedora_dev_states=(
+    # "catalog.debug.print_vars"
     "tpl-dev-fedora.install"
     "catalog.misc.python_build_deps_installed"
     "catalog.docker_rootless.setup_tpl"
