@@ -51,26 +51,36 @@ run_states() {
   # dom0
   # (no dom0-specific states yet)
 
-  # dev templates - debian
-  sudo qubesctl --show-output --targets=dom0 state.apply tpl-debian-minimal.create,tpl-dev-debian.clone
-  local debian_dev_states=(
+  # dev templates - debian - dom0
+  local debian_dev_states_for_dom0=(
+    "tpl-debian-minimal.create"
+    "tpl-dev-debian.clone"
+  )
+  sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${debian_dev_states_for_dom0[@]}")"
+  # dev templates - debian - templates
+  local debian_dev_states_for_templates=(
     # "catalog.debug.print_vars"
     "tpl-dev-debian.install"
     "catalog.docker_rootless.setup_tpl"
   )
-  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${debian_dev_states[@]}")"
+  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${debian_dev_states_for_templates[@]}")"
 
-  # dev templates - fedora
-  sudo qubesctl --show-output --targets=dom0 state.apply tpl-fedora-minimal.create,tpl-dev-fedora.clone
-  local fedora_dev_states=(
+  # dev templates - fedora - dom0
+  local fedora_dev_states_for_dom0=(
+    "tpl-fedora-minimal.create"
+    "tpl-dev-fedora.clone"
+  )
+  sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_dom0[@]}")"
+  # dev templates - fedora - templates
+  local fedora_dev_states_for_templates=(
     # "catalog.debug.print_vars"
     "tpl-dev-fedora.install"
     "catalog.misc.python_build_deps_installed"
     "catalog.docker_rootless.setup_tpl"
   )
-  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states[@]}")"
+  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_templates[@]}")"
 
-  # dev qubes
+  # dev templates - qubes
   sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
 
