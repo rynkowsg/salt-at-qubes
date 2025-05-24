@@ -3,7 +3,7 @@
 
 {% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
 
-"{{ ns }}/rootless_docker_installed":
+"{{ ns }}/rootless-docker-installed":
   cmd.run:
     - name: dockerd-rootless-setuptool.sh install
     - runas: user

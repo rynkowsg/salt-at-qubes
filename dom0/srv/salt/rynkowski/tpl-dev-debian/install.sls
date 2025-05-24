@@ -13,7 +13,7 @@ include:
 "{{ slsdotpath }}-pkgs-installed":
   pkg.installed:
     - require:
-      - pkg: "catalog.misc.pkgs_updated/default"
+      - pkg: catalog.misc.pkgs_updated/default
     - install_recommends: False
     - skip_suggestions: True
     - pkgs: {{ vars.pkgs|sequence|yaml }}
