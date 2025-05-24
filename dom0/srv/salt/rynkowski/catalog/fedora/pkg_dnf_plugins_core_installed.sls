@@ -5,6 +5,4 @@
     - install_recommends: False
     - skip_suggestions: True
     - pkgs:
-        - git
-        - pkgconf-pkg-config
         - dnf-plugins-core
