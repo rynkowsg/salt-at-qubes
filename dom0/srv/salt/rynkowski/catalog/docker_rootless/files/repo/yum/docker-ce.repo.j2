@@ -1,0 +1,8 @@
+[docker-ce-stable]
+name=Docker CE Stable - $basearch
+baseurl=https://download.docker.com/linux/{{ docker_distro }}/$releasever/$basearch/stable
+enabled=1
+gpgcheck=1
+gpgkey=file://{{ gpg_key_path }}
+
+# vim: ft=toml
