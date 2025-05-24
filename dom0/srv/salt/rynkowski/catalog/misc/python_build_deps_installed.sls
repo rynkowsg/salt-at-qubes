@@ -13,7 +13,7 @@ include:
 "{{ ns }}/default":
   cmd.run:
     - require:
-      - pkg: catalog.fedora.dnf_pkg_config_installed/default
+      - pkg: catalog.fedora.pkg_dnf_plugins_core_installed/default
     - name: dnf -y builddep python3
 
 {% endif %}
