@@ -53,7 +53,7 @@ run_states() {
 
   # dev templates - debian - dom0
   local debian_dev_states_for_dom0=(
-    "tpl-debian-minimal.create"
+    "catalog.debian.minimal-templates-installed"
     "tpl-dev-debian.clone"
   )
   sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${debian_dev_states_for_dom0[@]}")"
@@ -67,7 +67,7 @@ run_states() {
 
   # dev templates - fedora - dom0
   local fedora_dev_states_for_dom0=(
-    "tpl-fedora-minimal.create"
+    "catalog.fedora.minimal-templates-installed"
     "tpl-dev-fedora.clone"
   )
   sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_dom0[@]}")"

@@ -2,17 +2,19 @@
 #}
 
 include:
-  - tpl-fedora-minimal.create
+  - catalog.fedora.minimal-templates-installed
 
 "{{ slsdotpath }}.39-cloned":
   qvm.clone:
-    - require: [{sls: tpl-fedora-minimal.create}]
+    - require:
+        - qvm: catalog.fedora.minimal-templates-installed/39-installed
     - source: fedora-39-minimal
     - name: tpl-dev-fedora-39
 
 "{{ slsdotpath }}.40-cloned":
   qvm.clone:
-    - require: [{sls: tpl-fedora-minimal.create}]
+    - require:
+        - qvm: catalog.fedora.minimal-templates-installed/40-installed
     - source: fedora-40-minimal
     - name: tpl-dev-fedora-40
 
