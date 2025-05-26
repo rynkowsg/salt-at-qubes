@@ -35,28 +35,6 @@ FEDORA_DEV_TEMPLATES="tpl-dev-fedora-39"
 #sudo qubesctl --show-output --targets="dom0" state.apply debug.print_vars
 #sudo qubesctl --show-output --targets="tpl-dev-debian-11" --skip-dom0 state.apply debug.print_vars
 
-run_tops() {
-  # before
-  sudo qubesctl --show-output top.enabled
-
-  # enable / plan to disable
-  sudo qubesctl --show-output top.enable tpl-debian-minimal
-  add_on_exit sudo qubesctl --show-output top.disable tpl-debian-minimal
-  sudo qubesctl --show-output top.enable tpl-fedora-minimal
-  add_on_exit sudo qubesctl --show-output top.disable tpl-fedora-minimal
-  sudo qubesctl --show-output top.enable tpl-dev-debian
-  add_on_exit sudo qubesctl --show-output top.disable tpl-dev-debian
-  sudo qubesctl --show-output top.enable tpl-dev-fedora
-  add_on_exit sudo qubesctl --show-output top.disable tpl-dev-fedora
-  add_on_exit sudo qubesctl --show-output top.enabled
-
-  # actions
-  sudo qubesctl --show-output top.enabled
-  sudo qubesctl --show-output state.highstate
-  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" state.apply
-  sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" state.apply
-}
-
 run_states() {
   # dom0
   # (no dom0-specific states yet)
@@ -72,7 +50,6 @@ run_states() {
 }
 
 # the two below should be equivalent, but I prefer run_states
-#run_tops
 run_states
 
 set +x

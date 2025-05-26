@@ -1,8 +1,0 @@
-base:
-  'dom0':
-    - match: nodegroup
-    - tpl-dev-fedora.clone
-  'E@^tpl-dev-fedora-(39|40|41)$':
-    - match: compound
-    - tpl-dev-fedora.install
-    - tpl-dev-fedora.install-python-build-deps
