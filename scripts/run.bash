@@ -63,7 +63,7 @@ run_states() {
   sudo qubesctl --show-output --targets=dom0 state.apply tpl-fedora-minimal.create,tpl-dev-fedora.clone
   local fedora_dev_states=(
     "tpl-dev-fedora.install"
-    "tpl-dev-fedora.install-python-build-deps"
+    "catalog.misc.python_build_deps_installed"
     "catalog.docker_rootless.setup_tpl"
   )
   sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states[@]}")"
