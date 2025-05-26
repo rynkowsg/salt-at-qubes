@@ -1,14 +1,16 @@
 {#
 #}
 
-{%- import slsdotpath ~ "/vars.jinja" as vars -%}
+{% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
 
-"{{ slsdotpath }}.11-installed":
+{%- import slspath ~ "/vars.jinja" as vars -%}
+
+"{{ ns }}/11-installed":
   qvm.template_installed:
     - name: debian-11-minimal
     - from: {{ vars.repo }}
 
-"{{ slsdotpath }}.12-installed":
+"{{ ns }}/12-installed":
   qvm.template_installed:
     - name: debian-12-minimal
     - from: {{ vars.repo }}

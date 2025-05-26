@@ -1,24 +1,26 @@
 {#
 #}
 
-{%- import slsdotpath ~ "/vars.jinja" as vars -%}
+{% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
 
-"{{ slsdotpath }}.38-installed":
+{%- import slspath ~ "/vars.jinja" as vars -%}
+
+"{{ ns }}/38-installed":
   qvm.template_installed:
     - name: fedora-38-minimal
     - from: {{ vars.repo }}
 
-"{{ slsdotpath }}.39-installed":
+"{{ ns }}/39-installed":
   qvm.template_installed:
     - name: fedora-39-minimal
     - from: {{ vars.repo }}
 
-"{{ slsdotpath }}.40-installed":
+"{{ ns }}/40-installed":
   qvm.template_installed:
     - name: fedora-40-minimal
     - from: {{ vars.repo }}
 
-"{{ slsdotpath }}.41-installed":
+"{{ ns }}/41-installed":
   qvm.template_installed:
     - name: fedora-41-minimal
     - from: {{ vars.repo }}
