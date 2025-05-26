@@ -1,0 +1,18 @@
+---
+description: general rule
+alwaysApply: true
+---
+
+## Project Context
+
+This repository contains SaltStack configurations for Qubes OS template management.
+The majority of content comes from the Qubes team as a framework, with custom modifications
+primarily located under `/srv/salt/rynkowski/`.
+
+## File Structure & Conventions
+
+### Directory Structure
+- `scripts/` - Management and automation scripts
+- `dom0/srv/salt/` - SaltStack states and configurations
+- `dom0/srv/salt/rynkowski/` - **Primary development area** - custom Salt states and modules
+- Templates and states should be organized in logical subdirectories

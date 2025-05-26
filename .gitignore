@@ -11,3 +11,6 @@
 !/.idea/repl-commands.xml
 !/.idea/runConfigurations/
 *.iml
+
+# Aider
+.aider*
