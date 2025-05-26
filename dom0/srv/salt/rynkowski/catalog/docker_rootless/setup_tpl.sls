@@ -113,22 +113,6 @@
         - pkg: "{{ ns }}/deps-installed"
     - name: docker.socket
 
-# Enable ip_tables
-#
-# Based on my tests:
-# - Fedora 39 needs it
-# - Debian 11 does not
-
-{% if grains['os']|lower == 'fedora' -%}
-
-"{{ ns }}/ip-tables-module-added":
-  file.managed:
-    - name: /etc/modules-load.d/ip_tables.conf
-    - mode: '0644'
-    - user: root
-    - group: root
-    - contents: |
-        ip_tables
-# `ip_tables` is necessary to run `dockerd-rootless-setuptool.sh install`
-
-{% endif -%}
+"{{ ns }}/ip-tables-module-loaded":
+  kmod.present:
+    - name: ip_tables
