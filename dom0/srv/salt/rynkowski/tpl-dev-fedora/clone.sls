@@ -1,24 +1,26 @@
 {#
 #}
 
+{% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
+
 include:
   - catalog.fedora.minimal-templates-installed
 
-"{{ slsdotpath }}.39-cloned":
+"{{ ns }}/39-cloned":
   qvm.clone:
     - require:
         - qvm: catalog.fedora.minimal-templates-installed/39-installed
     - source: fedora-39-minimal
     - name: tpl-dev-fedora-39
 
-"{{ slsdotpath }}.40-cloned":
+"{{ ns }}/40-cloned":
   qvm.clone:
     - require:
         - qvm: catalog.fedora.minimal-templates-installed/40-installed
     - source: fedora-40-minimal
     - name: tpl-dev-fedora-40
 
-"{{ slsdotpath }}.41-removed":
+"{{ ns }}/41-removed":
   qvm.absent:
     - name: tpl-dev-fedora-41
 # For some reason there are issues with DNF5 on Fedora 41.
