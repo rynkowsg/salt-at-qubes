@@ -1,11 +1,10 @@
 {#
 #}
 
-{% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
+{%- set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] -%}
 
-{% if grains['os_family']|lower == 'debian' -%}
-
-{% set gpg_key_path = "/usr/share/keyrings/docker.asc" %}
+{% if grains['os_family']|lower == 'debian' %}
+{% set gpg_key_path = "/usr/share/keyrings/docker.asc" -%}
 
 "{{ ns }}/keyring-installed":
   file.managed:
@@ -42,13 +41,13 @@
 
 ###############################################################################
 
-{% elif grains['os_family']|lower == 'redhat' -%}
+{% elif grains['os_family']|lower == 'redhat' %}
 
 # Instructions for Fedora:
 # https://docs.docker.com/engine/install/fedora/
 # https://docs.docker.com/engine/security/rootless/
 
-{% set gpg_key_path = "/etc/pki/rpm-gpg/RPM-GPG-KEY-docker-ce.asc" %}
+{% set gpg_key_path = "/etc/pki/rpm-gpg/RPM-GPG-KEY-docker-ce.asc" -%}
 
 "{{ ns }}/keyring-installed":
   file.managed:
@@ -59,8 +58,8 @@
     - group: root
     - makedirs: True
 
-{% set distro_map = {'CentOS': 'centos', 'Fedora': 'fedora', 'RedHat': 'rhel'} %}
-{% set docker_distro = distro_map.get(grains['os'], 'rhel') %}
+{% set distro_map = {'CentOS': 'centos', 'Fedora': 'fedora', 'RedHat': 'rhel'} -%}
+{% set docker_distro = distro_map.get(grains['os'], 'rhel') -%}
 
 "{{ ns }}/repo-installed":
   file.managed:
