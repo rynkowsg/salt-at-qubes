@@ -38,14 +38,26 @@ join_by() {
 ### REST
 
 set -x
-
 DEBIAN_DEV_TEMPLATES="tpl-dev-debian-11"
 FEDORA_DEV_TEMPLATES="tpl-dev-fedora-39"
 DEV_QUBES="${DEV_QUBES:-"work-rynkowsg"}"
+set +x
 
 # debug
 #sudo qubesctl --show-output --targets="dom0" state.apply debug.print_vars
 #sudo qubesctl --show-output --targets="tpl-dev-debian-11" --skip-dom0 state.apply debug.print_vars
+
+print_states() {
+  # Preview with `slsutil.renderer`
+  # Caviat: slsutil.renderer unfortunately does not resolve slspath so jinja can't import stuff with it
+  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" slsutil.renderer /srv/salt/rynkowski/catalog/docker_rootless/setup_tpl.sls default_renderer='jinja'
+#  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" slsutil.renderer /srv/salt/rynkowski/catalog/misc/pkgs_updated.sls default_renderer='jinja'
+#  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" slsutil.renderer /srv/salt/rynkowski/tpl-dev-debian/install.sls default_renderer='jinja'
+
+  # Preview with `state.show_sls`
+  # Caviat: Does not show bare YAML, but processes SLS
+#  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" state.show_sls rynkowski.tpl-dev-debian.install --output=yaml
+}
 
 run_states() {
   # dom0
@@ -84,9 +96,9 @@ run_states() {
   sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
 
-# the two below should be equivalent, but I prefer run_states
+#print_states
+set -x
 run_states
-
 set +x
 
 echo "run completed"
