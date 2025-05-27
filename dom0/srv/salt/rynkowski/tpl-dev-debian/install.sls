@@ -1,7 +1,7 @@
 {#
 #}
 
-{% set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] %}
+{%- set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] -%}
 
 {% if grains['id'] == 'dom0' %}
 
