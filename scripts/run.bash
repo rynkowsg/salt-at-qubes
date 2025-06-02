@@ -59,46 +59,59 @@ print_states() {
 #  sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" state.show_sls rynkowski.tpl-dev-debian.install --output=yaml
 }
 
-run_states() {
-  # dom0
-  # (no dom0-specific states yet)
+run_states_for_dom0() {
+    local dom0_states=(
+#      "catalog.debug.print_vars"
+      "catalog.dom0.install_templates_debian_minimal"
+      "catalog.dom0.install_templates_fedora_minimal"
+    )
+    sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${dom0_states[@]}")"
+}
 
-  # dev templates - debian - dom0
+run_states_for_dev() {
+  # -------------------
+  # template dev fedora
+  # -------------------
+
   local debian_dev_states_for_dom0=(
-    "catalog.debian.minimal-templates-installed"
     "tpl-dev-debian.clone"
   )
   sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${debian_dev_states_for_dom0[@]}")"
-  # dev templates - debian - templates
+
   local debian_dev_states_for_templates=(
-    # "catalog.debug.print_vars"
+#    "catalog.debug.print_vars"
     "tpl-dev-debian.install"
     "catalog.docker_rootless.setup_tpl"
   )
   sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${debian_dev_states_for_templates[@]}")"
 
-  # dev templates - fedora - dom0
+  # -------------------
+  # template dev fedora
+  # -------------------
+
   local fedora_dev_states_for_dom0=(
-    "catalog.fedora.minimal-templates-installed"
     "tpl-dev-fedora.clone"
   )
   sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_dom0[@]}")"
-  # dev templates - fedora - templates
   local fedora_dev_states_for_templates=(
-    # "catalog.debug.print_vars"
+#    "catalog.debug.print_vars"
     "tpl-dev-fedora.install"
     "catalog.misc.python_build_deps_installed"
     "catalog.docker_rootless.setup_tpl"
   )
   sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_templates[@]}")"
 
-  # dev templates - qubes
+  # ----------
+  # qubes: dev
+  # ----------
+
   sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
 
 #print_states
 set -x
-run_states
+run_states_for_dom0
+run_states_for_dev
 set +x
 
 echo "run completed"

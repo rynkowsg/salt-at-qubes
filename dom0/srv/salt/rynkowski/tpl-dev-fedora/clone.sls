@@ -4,21 +4,16 @@
 {%- set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] -%}
 
 include:
-  - catalog.fedora.minimal-templates-installed
+  - catalog.dom0.install_templates_fedora_minimal
 
-"{{ ns }}/39-cloned":
+{% for os_version in [39, 40] %}
+"{{ ns }}/tpl-dev-fedora-{{ os_version }}-created":
   qvm.clone:
     - require:
-        - qvm: catalog.fedora.minimal-templates-installed/39-installed
-    - source: fedora-39-minimal
-    - name: tpl-dev-fedora-39
-
-"{{ ns }}/40-cloned":
-  qvm.clone:
-    - require:
-        - qvm: catalog.fedora.minimal-templates-installed/40-installed
-    - source: fedora-40-minimal
-    - name: tpl-dev-fedora-40
+        - qvm: catalog.dom0.install_templates_fedora_minimal/fedora-{{ os_version }}-minimal-installed
+    - source: fedora-{{ os_version }}-minimal
+    - name: tpl-dev-fedora-{{ os_version }}
+{% endfor %}
 
 "{{ ns }}/41-removed":
   qvm.absent:

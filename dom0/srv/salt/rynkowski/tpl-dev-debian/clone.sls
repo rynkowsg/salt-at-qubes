@@ -4,18 +4,13 @@
 {%- set ns = slsdotpath + '.' + tplfile.split('/')[-1].split('.')[0] -%}
 
 include:
-  - catalog.debian.minimal-templates-installed
+  - catalog.dom0.install_templates_debian_minimal
 
-"{{ ns }}/11-cloned":
+{% for os_version in [11, 12] %}
+"{{ ns }}/tpl-dev-debian-{{ os_version }}-created":
   qvm.clone:
     - require:
-      - qvm: catalog.debian.minimal-templates-installed/11-installed
-    - source: debian-11-minimal
-    - name: tpl-dev-debian-11
-
-"{{ ns }}/12-cloned":
-  qvm.clone:
-    - require:
-      - qvm: catalog.debian.minimal-templates-installed/12-installed
-    - source: debian-12-minimal
-    - name: tpl-dev-debian-12
+        - qvm: catalog.dom0.install_templates_debian_minimal/debian-{{ os_version }}-minimal-installed
+    - source: debian-{{ os_version }}-minimal
+    - name: tpl-dev-debian-{{ os_version }}
+{% endfor %}
