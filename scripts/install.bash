@@ -14,5 +14,6 @@ sudo cp "${ROOT_DIR}/dom0/etc/salt/minion.d/rynkowski.conf" "/etc/salt/minion.d/
 # copy formulas
 sudo rm -rf /srv/salt/rynkowski
 sudo cp -r "${ROOT_DIR}/dom0/srv/salt/rynkowski" "/srv/salt/rynkowski"
+sudo cp -r "${ROOT_DIR}/dom0/srv/pillar/rynkowski" "/srv/pillar/rynkowski"
 
 echo "install completed"
