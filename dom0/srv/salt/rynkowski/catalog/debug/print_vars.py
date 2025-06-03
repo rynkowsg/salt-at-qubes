@@ -31,24 +31,27 @@ def print_all_vars():
 #	 for key, value in __salt__.items():
 #		 print(f"{key}: {value}")
 	# print()
-	# print("--------------------------------------------------")
-	# print("__pillar__")
-	# print("--------------------------------------------------")
-	# print()
-	# for key, value in __pillar__.items():
-	# 	print(f"{key}: {value}")
-	# print()
+	print("--------------------------------------------------")
+	print("__pillar__")
+	print("--------------------------------------------------")
+	print()
+	for key, value in __pillar__.items():
+		print(f"{key}: {value}")
+		print(f"--------------------------")
+	print()
 	print("--------------------------------------------------")
 	print("__grains__")
 	print("--------------------------------------------------")
 	print()
 	for key, value in __grains__.items():
 		print(f"{key}: {value}")
-#	 print("--------------------------------------------------")
-#	 print("__opts__")
-#	 print("--------------------------------------------------")
-#	 for key, value in __opts__.items():
-#		 print(f"{key}: {value}")
+		print(f"--------------------------")
+	print("--------------------------------------------------")
+	print("__opts__")
+	print("--------------------------------------------------")
+	for key, value in __opts__.items():
+		print(f"{key}: {value}")
+		print(f"--------------------------")
 
 def wget():
 	os = __grains__.get('os')
@@ -66,18 +69,18 @@ def wget():
 
 def run():
 	print_all_vars()
-	print(f"os.getcwd(): {os.getcwd()}")
-	print("file", __file__)
-
-	print("base", Path(__file__).parent.parent)
-	ls(Path(__file__).parent.parent)
-	# Print the full version string
-	print("Python version:", sys.version)
-	# Or use version_info for a tuple of version numbers
-	print("Version info:", sys.version_info)
-	print("Content of sys.path:")
-	for path in sys.path:
-		print(path)
+	# print(f"os.getcwd(): {os.getcwd()}")
+	# print("file", __file__)
+	#
+	# print("base", Path(__file__).parent.parent)
+	# ls(Path(__file__).parent.parent)
+	# # Print the full version string
+	# print("Python version:", sys.version)
+	# # Or use version_info for a tuple of version numbers
+	# print("Version info:", sys.version_info)
+	# print("Content of sys.path:")
+	# for path in sys.path:
+	# 	print(path)
 
 	config = {}
 	state_id = f'{__sls__}-fake-state'

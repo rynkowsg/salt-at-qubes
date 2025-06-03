@@ -61,6 +61,7 @@ print_states() {
 
 run_states_for_dom0() {
     local dom0_states=(
+#      "catalog.debug.echo_pillar"
 #      "catalog.debug.print_vars"
       "catalog.dom0.install_templates_debian_minimal"
       "catalog.dom0.install_templates_fedora_minimal"
