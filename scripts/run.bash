@@ -71,7 +71,7 @@ run_states_for_dom0() {
 
 run_states_for_dev() {
   # -------------------
-  # template dev fedora
+  # template dev debian
   # -------------------
 
   local debian_dev_states_for_dom0=(
@@ -85,6 +85,12 @@ run_states_for_dev() {
     "catalog.docker_rootless.setup_tpl"
   )
   sudo qubesctl --show-output --targets="${DEBIAN_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${debian_dev_states_for_templates[@]}")"
+
+  local debian_dev_states_for_dom0_2=(
+#      "catalog.debug.echo_pillar"
+    "tpl-dev-debian.install"
+  )
+  sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${debian_dev_states_for_dom0_2[@]}")" pillar="{\"templates\": [${DEBIAN_DEV_TEMPLATES}]}"
 
   # -------------------
   # template dev fedora
@@ -101,6 +107,12 @@ run_states_for_dev() {
     "catalog.docker_rootless.setup_tpl"
   )
   sudo qubesctl --show-output --targets="${FEDORA_DEV_TEMPLATES}" --skip-dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_templates[@]}")"
+
+  local fedora_dev_states_for_dom0_2=(
+#      "catalog.debug.echo_pillar"
+    "tpl-dev-fedora.install"
+  )
+  sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${fedora_dev_states_for_dom0_2[@]}")" pillar="{\"templates\": [${FEDORA_DEV_TEMPLATES}]}"
 
   # ----------
   # qubes: dev
