@@ -1,5 +1,6 @@
 {
+    "vscode-jetbrains-sync.port": 7532,
+    "workbench.editor.showTabs": "multiple",
     "workbench.editor.limit.enabled": true,
-    "workbench.editor.limit.value": 1,
-    "workbench.editor.showTabs": "multiple"
+    "workbench.editor.limit.value": 1
 }
