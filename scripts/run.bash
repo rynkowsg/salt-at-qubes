@@ -38,6 +38,10 @@ join_by() {
 ### REST
 
 set -x
+
+DEBIAN_SYS_USB_TEMPLATES="tpl-sys-usb-debian-12"
+FEDORA_SYS_USB_TEMPLATES="tpl-sys-usb-fedora-40,tpl-sys-usb-fedora-41"
+FEDORA_DEV_TEMPLATES="tpl-dev-fedora-39"
 DEBIAN_DEV_TEMPLATES="tpl-dev-debian-11"
 FEDORA_DEV_TEMPLATES="tpl-dev-fedora-39"
 DEV_QUBES="${DEV_QUBES:-"work-rynkowsg"}"
@@ -123,9 +127,29 @@ run_states_for_dev() {
   sudo qubesctl --show-output --targets="${DEV_QUBES}" --skip-dom0 state.apply catalog.docker_rootless.setup_qube
 }
 
+
+run_states_for_usb() {
+  # -------------------
+  # template usb debian
+  # -------------------
+
+  local states_for_dom0=(
+    "sys-usb.tpl.at-dom0.clone-debian"
+    "sys-usb.tpl.at-dom0.clone-fedora"
+  )
+  sudo qubesctl --show-output --targets=dom0 state.apply "$(join_by ',' "${states_for_dom0[@]}")"
+
+  local states_for_templates=(
+    "sys-usb.tpl.at-tpl.install"
+  )
+  local tpl_targets="${DEBIAN_SYS_USB_TEMPLATES},${FEDORA_SYS_USB_TEMPLATES}"
+  sudo qubesctl --show-output --targets="${tpl_targets}" --skip-dom0 state.apply "$(join_by ',' "${states_for_templates[@]}")"
+}
+
 #print_states
 set -x
 run_states_for_dom0
+run_states_for_usb
 run_states_for_dev
 set +x
 
